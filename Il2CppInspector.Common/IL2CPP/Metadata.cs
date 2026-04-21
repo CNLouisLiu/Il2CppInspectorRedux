@@ -205,6 +205,9 @@ namespace Il2CppInspector
                     if (Version == MetadataVersions.V240) {
                         Version = MetadataVersions.V242;
                         Header = ReadVersionedObject<Il2CppGlobalMetadataHeader>(0);
+                    } else if (Version == MetadataVersions.V290 || Version == MetadataVersions.V310) {
+                        Version = new StructVersion(Version.Major, 0, MetadataVersions.Tag2022);
+                        Header = ReadVersionedObject<Il2CppGlobalMetadataHeader>(0);
                     }
                 }
 

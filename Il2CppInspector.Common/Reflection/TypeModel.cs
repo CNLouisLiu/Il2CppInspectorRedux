@@ -322,6 +322,8 @@ namespace Il2CppInspector.Reflection
 
             if (container.IsMethod == 1) {
                 var owner = MethodsByDefinitionIndex[container.OwnerIndex];
+                if (owner == null)
+                    return null;
                 result = new TypeInfo(owner, paramType);
             } else {
                 var owner = TypesByDefinitionIndex[container.OwnerIndex];

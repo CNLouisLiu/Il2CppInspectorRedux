@@ -194,12 +194,12 @@ namespace Il2CppInspector
                 if (fdv.FieldIndex == -1 && fdv.TypeIndex == -1)
                     continue;
 
-                FieldDefaultValue.Add(fdv.FieldIndex, ((ulong, object))getDefaultValue(fdv.TypeIndex, fdv.DataIndex));
+                FieldDefaultValue.TryAdd(fdv.FieldIndex, ((ulong, object))getDefaultValue(fdv.TypeIndex, fdv.DataIndex));
             }
 
             // Get all parameter default values
             foreach (var pdv in Metadata.ParameterDefaultValues)
-                ParameterDefaultValue.Add(pdv.ParameterIndex, ((ulong,object)) getDefaultValue(pdv.TypeIndex, pdv.DataIndex));
+                ParameterDefaultValue.TryAdd(pdv.ParameterIndex, ((ulong,object)) getDefaultValue(pdv.TypeIndex, pdv.DataIndex));
 
             // Get all field offsets
             if (Binary.FieldOffsets != null) {
@@ -220,12 +220,12 @@ namespace Il2CppInspector
                             BinaryImage.Position = fieldOffsetPosition;
                             var fieldOffsets = BinaryImage.ReadArray<uint>(def.FieldCount);
                             for (var fieldIndex = 0; fieldIndex < def.FieldCount; fieldIndex++)
-                                offsets.Add(def.FieldIndex + fieldIndex, fieldOffsets[fieldIndex]);
+                                offsets.TryAdd(def.FieldIndex + fieldIndex, fieldOffsets[fieldIndex]);
                         }
                         else
                         {
                             for (var fieldIndex = 0; fieldIndex < def.FieldCount; fieldIndex++)
-                                offsets.Add(def.FieldIndex + fieldIndex, 0);
+                                offsets.TryAdd(def.FieldIndex + fieldIndex, 0);
                         }
                     }
                 }

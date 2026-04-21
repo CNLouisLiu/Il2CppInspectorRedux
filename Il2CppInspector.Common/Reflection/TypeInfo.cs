@@ -386,8 +386,8 @@ namespace Il2CppInspector.Reflection
                     if (DeclaringType != null)
                         n = DeclaringType.Name + "+" + n;
                     var ga = GetGenericArguments();
-                    if (ga.Any())
-                        n += "[" + string.Join(",", ga.Select(x => x.Namespace != Namespace ? x.FullName ?? x.Name : x.Name)) + "]";
+                    if (ga.Any(x => x != null))
+                        n += "[" + string.Join(",", ga.Where(x => x != null).Select(x => x.Namespace != Namespace ? x.FullName ?? x.Name : x.Name)) + "]";
                     return n;
                 }
             }
@@ -814,22 +814,32 @@ namespace Il2CppInspector.Reflection
 
             // Add all implemented interfaces
             implementedInterfaceReferences = new TypeRef[Definition.InterfacesCount];
-            for (var i = 0; i < Definition.InterfacesCount; i++)
-                implementedInterfaceReferences[i] = TypeRef.FromReferenceIndex(Assembly.Model, pkg.InterfaceUsageIndices[Definition.InterfacesIndex + i]);
+            for (var i = 0; i < Definition.InterfacesCount; i++) {
+                var idx = Definition.InterfacesIndex + i;
+                if (idx < 0 || idx >= pkg.InterfaceUsageIndices.Length)
+                    break;
+                implementedInterfaceReferences[i] = TypeRef.FromReferenceIndex(Assembly.Model, pkg.InterfaceUsageIndices[idx]);
+            }
 
             // Add all nested types
             declaredNestedTypes = new TypeRef[Definition.NestedTypeCount];
-            for (var n = 0; n < Definition.NestedTypeCount; n++)
-                declaredNestedTypes[n] = TypeRef.FromDefinitionIndex(Assembly.Model, pkg.NestedTypeIndices[Definition.NestedTypeIndex + n]);
+            for (var n = 0; n < Definition.NestedTypeCount; n++) {
+                var idx = Definition.NestedTypeIndex + n;
+                if (idx < 0 || idx >= pkg.NestedTypeIndices.Length)
+                    break;
+                declaredNestedTypes[n] = TypeRef.FromDefinitionIndex(Assembly.Model, pkg.NestedTypeIndices[idx]);
+            }
 
             // Add all fields
             declaredFields = new List<FieldInfo>();
-            for (var f = Definition.FieldIndex; f < Definition.FieldIndex + Definition.FieldCount; f++)
-                declaredFields.Add(new FieldInfo(pkg, f, this));
+            if (Definition.FieldCount > 0 && (int)Definition.FieldIndex >= 0 && Definition.FieldIndex + Definition.FieldCount <= pkg.Fields.Length)
+                for (var f = Definition.FieldIndex; f < Definition.FieldIndex + Definition.FieldCount; f++)
+                    declaredFields.Add(new FieldInfo(pkg, f, this));
 
             // Add all methods
             declaredConstructors = new List<ConstructorInfo>();
             declaredMethods = new List<MethodInfo>();
+            if (Definition.MethodCount > 0 && (int)Definition.MethodIndex >= 0 && Definition.MethodIndex + Definition.MethodCount <= pkg.Methods.Length)
             for (var m = Definition.MethodIndex; m < Definition.MethodIndex + Definition.MethodCount; m++) {
                 var method = new MethodInfo(pkg, m, this);
                 if (method.Name == ConstructorInfo.ConstructorName || method.Name == ConstructorInfo.TypeConstructorName)

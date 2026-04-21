@@ -151,7 +151,7 @@ namespace Il2CppInspector
                                     {
                                         var expectedImageCountPtr = potentialCodeRegistrationPtr - ptrSize;
                                         var expectedImageCount = Image.ReadMappedWord(expectedImageCountPtr);
-                                        if (expectedImageCount == imagesCount)
+                                        if (expectedImageCount > 0 && (long)expectedImageCount <= imagesCount)
                                             return potentialCodeRegistrationPtr;
                                     }
                                 }
@@ -276,7 +276,8 @@ namespace Il2CppInspector
             var mrSize = (ulong)Il2CppMetadataRegistration.StructSize(Image.Version, readerConfig);
             var typesLength = (ulong) metadata.Types.Length;
 
-            vas = FindAllMappedWords(imageBytes, typesLength).Select(a => a - mrSize + ptrSize * 4);
+            var rawVas = FindAllMappedWords(imageBytes, typesLength).ToList();
+            vas = rawVas.Select(a => a - mrSize + ptrSize * 4);
 
             // >= 19
             // Luke: Previously, a check comparing MetadataUsagesCount was used here, 

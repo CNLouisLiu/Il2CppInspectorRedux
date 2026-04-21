@@ -82,11 +82,9 @@ public partial record struct Il2CppCodeRegistration
     [VersionCondition(GreaterThanOrEqual = "22.0")]
     public Pointer<Il2CppMethodPointer> UnresolvedVirtualCallPointers;
 
-    [VersionCondition(EqualTo = "29.0", IncludingTag = "2022"), VersionCondition(EqualTo = "31.0", IncludingTag = "2022")]
     [VersionCondition(GreaterThanOrEqual = "35.0")]
     public Pointer<Il2CppMethodPointer> UnresolvedInstanceCallWrappers;
 
-    [VersionCondition(EqualTo = "29.0", IncludingTag = "2022"), VersionCondition(EqualTo = "31.0", IncludingTag = "2022")]
     [VersionCondition(GreaterThanOrEqual = "35.0")]
     public Pointer<Il2CppMethodPointer> UnresolvedStaticCallPointers;
 

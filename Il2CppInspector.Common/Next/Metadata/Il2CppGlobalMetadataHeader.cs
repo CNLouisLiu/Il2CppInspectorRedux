@@ -248,6 +248,14 @@ public partial record struct Il2CppGlobalMetadataHeader
     [VersionCondition(GreaterThanOrEqual = "24.0", LessThanOrEqual = "35.0")]
     public int ExportedTypeDefinitionsSize { get; private set; }
 
+    [VersionCondition(EqualTo = "29.0", IncludingTag = "2022")]
+    [VersionCondition(EqualTo = "31.0", IncludingTag = "2022")]
+    public int CodeGenModulesOffset { get; private set; }
+
+    [VersionCondition(EqualTo = "29.0", IncludingTag = "2022")]
+    [VersionCondition(EqualTo = "31.0", IncludingTag = "2022")]
+    public int CodeGenModulesSize { get; private set; }
+
     // new, v38 metadata sections
 
     [VersionCondition(GreaterThanOrEqual = "38.0")]

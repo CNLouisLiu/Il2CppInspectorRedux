@@ -60,6 +60,10 @@ public partial record struct Il2CppTypeDefinition
     public VTableIndex VTableIndex { get; private set; }
     public InterfacesIndex InterfaceOffsetsStart { get; private set; }
 
+    [VersionCondition(EqualTo = "29.0", IncludingTag = "2022")]
+    [VersionCondition(EqualTo = "31.0", IncludingTag = "2022")]
+    public int UnknownIndex2022 { get; private set; }
+
     public ushort MethodCount { get; private set; }
     public ushort PropertyCount { get; private set; }
     public ushort FieldCount { get; private set; }
